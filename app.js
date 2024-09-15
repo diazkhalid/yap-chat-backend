@@ -6,6 +6,7 @@ app.use(express.urlencoded({ extended: true }));
 
 const usersRoute = require("./routes/users.route");
 const chatRoomsRoute = require("./routes/chatrooms.route");
+app.get("/", (req, res) => res.send("WELCOME!"));
 app.use("/users", usersRoute);
 app.use("/chatrooms", chatRoomsRoute);
 
