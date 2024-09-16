@@ -8,6 +8,7 @@ const checkNameAvailability = async (name) => {
 
 const createChatRoom = async (req, res) => {
   const { name } = req.body;
+  const { id } = req.payload;
   const verifyAvailability = await checkNameAvailability(name);
   if (!verifyAvailability) {
     return res.status(400).json({
@@ -16,7 +17,7 @@ const createChatRoom = async (req, res) => {
     });
   }
 
-  const chatRoom = new ChatRoom({ name });
+  const chatRoom = new ChatRoom({ name, room_master_id: id });
   const savedChatRoom = await chatRoom.save();
   return res.status(201).json({
     status: 201,

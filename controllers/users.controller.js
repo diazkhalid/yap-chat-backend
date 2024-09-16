@@ -65,7 +65,7 @@ const login = async (req, res) => {
   if (!user) {
     return res.status(404).json({
       status: 404,
-      message: "User is not registered",
+      message: "Email or password is incorrect",
     });
   }
 
@@ -73,7 +73,7 @@ const login = async (req, res) => {
   if (!isMatch) {
     return res.status(401).json({
       status: 401,
-      message: "Invalid credentials",
+      message: "Email or password is incorrect",
     });
   }
 
