@@ -93,7 +93,6 @@ const login = async (req, res) => {
 };
 
 const getSession = async (req, res) => {
-  console.log(req.payload);
   return res.status(200).json({
     status: 200,
     message: "User session retrieved successfully",
