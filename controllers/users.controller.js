@@ -78,7 +78,7 @@ const login = async (req, res) => {
   }
 
   const token = jwt.sign(
-    { id: user._id, username: user.username },
+    { id: user._id, username: user.username, email: user.email },
     process.env.JWT_SECRET_KEY,
     {
       expiresIn: `${process.env.JWT_EXPIRES_IN}h`,
@@ -92,4 +92,13 @@ const login = async (req, res) => {
   });
 };
 
-module.exports = { register, login };
+const getSession = async (req, res) => {
+  console.log(req.payload);
+  return res.status(200).json({
+    status: 200,
+    message: "User session retrieved successfully",
+    data: req.payload,
+  });
+};
+
+module.exports = { register, login, getSession };

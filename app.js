@@ -1,8 +1,10 @@
 const express = require("express");
 const app = express();
+var cors = require("cors");
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use(cors());
 
 const usersRoute = require("./routes/users.route");
 const chatRoomsRoute = require("./routes/chatrooms.route");
