@@ -8,9 +8,11 @@ app.use(cors());
 
 const usersRoute = require("./routes/users.route");
 const chatRoomsRoute = require("./routes/chatrooms.route");
+const messagesRoute = require("./routes/messages.route");
 app.get("/", (req, res) => res.send("WELCOME!"));
 app.use("/users", usersRoute);
 app.use("/chatrooms", chatRoomsRoute);
+app.use("/messages", messagesRoute);
 
 const errorHandler = require("./handlers/error.handler");
 app.use(errorHandler.notFound);

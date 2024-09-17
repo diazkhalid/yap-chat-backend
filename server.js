@@ -25,6 +25,9 @@ const server = app.listen(4000, () =>
 const io = require("socket.io")(server);
 const jwt = require("jsonwebtoken");
 
+const Messages = mongoose.model("Messages");
+const Users = mongoose.model("Users");
+
 io.use(async (socket, next) => {
   try {
     const token = socket.handshake.query.token;
@@ -39,5 +42,55 @@ io.on("connection", (socket) => {
 
   socket.on("disconnect", () => {
     console.log("User disconnected: " + socket.userId);
+  });
+  socket.on("joinRoom", ({ chatRoomId }) => {
+    socket.join(chatRoomId);
+    console.log("User joined room: " + chatRoomId);
+  });
+
+  socket.on("leaveRoom", ({ chatRoomId }) => {
+    socket.leave(chatRoomId);
+    console.log("User left room: " + chatRoomId);
+  });
+
+  socket.on("chatRoomMessage", async ({ chatRoomId, message }) => {
+    if (message.trim().length > 0) {
+      const user = await Users.findOne({ _id: socket.userId });
+      const newMessage = new Messages({
+        chatroom: chatRoomId,
+        user: socket.userId,
+        message,
+      });
+      const savedMessage = await newMessage.save();
+      const objectId = new mongoose.Types.ObjectId(chatRoomId);
+      const addedMessage = await Messages.aggregate([
+        {
+          $match: {
+            chatroom: objectId,
+            _id: savedMessage._id,
+          },
+        },
+        {
+          $lookup: {
+            from: "users",
+            localField: "user",
+            foreignField: "_id",
+            as: "user",
+          },
+        },
+        { $addFields: { username: { $arrayElemAt: ["$user.username", 0] } } },
+        { $addFields: { userId: { $arrayElemAt: ["$user._id", 0] } } },
+        {
+          $sort: { createdAt: 1 },
+        },
+        {
+          $project: {
+            user: 0,
+            __v: 0,
+          },
+        },
+      ]);
+      io.to(chatRoomId).emit("newMessage", addedMessage[0]);
+    }
   });
 });
