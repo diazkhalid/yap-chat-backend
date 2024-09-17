@@ -9,4 +9,6 @@ router.post(
   catchErrors(chatRoomController.createChatRoom)
 );
 
+router.get("/", AuthMiddleware, catchErrors(chatRoomController.getChatRooms));
+
 module.exports = router;

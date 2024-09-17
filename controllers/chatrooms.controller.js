@@ -26,4 +26,13 @@ const createChatRoom = async (req, res) => {
   });
 };
 
-module.exports = { createChatRoom };
+const getChatRooms = async (req, res) => {
+  const chatRooms = await ChatRoom.find();
+  return res.status(200).json({
+    status: 200,
+    message: "ChatRooms fetched successfully",
+    data: chatRooms,
+  });
+};
+
+module.exports = { createChatRoom, getChatRooms };
