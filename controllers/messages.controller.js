@@ -11,7 +11,6 @@ const getMessageByChatRoomId = async (req, res) => {
   }
 
   const objectId = new mongoose.Types.ObjectId(chatRoomId);
-  console.log(objectId);
 
   try {
     const messages = await Messages.aggregate([
