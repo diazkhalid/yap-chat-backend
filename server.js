@@ -18,7 +18,7 @@ require("./models/Messages.model");
 
 const app = require("./app");
 
-const server = app.listen(4000, () =>
+const server = app.listen(process.env.PORT, () =>
   console.log("Server started on http://localhost:4000")
 );
 
